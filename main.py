@@ -50,7 +50,6 @@ def search():
 
 def get_compound_data(compound_name):
     compound_info = pcp.get_compounds(compound_name, 'name')
-    print(f"Search results for '{compound_name}': {compound_info}")
     if not compound_info or len(compound_info) == 0:
         return None
     compound = compound_info[0]
@@ -66,7 +65,6 @@ def get_compound_data(compound_name):
         'mol_data': mol_data,
         'fingerprint': fingerprint
     }
-    print(f"Compound data: {compound_data}")
     return compound_data
 
 
@@ -75,8 +73,6 @@ def compare():
     compound1_name = request.form.get('compound1')
     compound2_name = request.form.get('compound2')
     try:
-        print(f"Received compounds: {compound1_name}, {compound2_name}")
-
         compound1_data = get_compound_data(compound1_name) if compound1_name else None
         compound2_data = get_compound_data(compound2_name) if compound2_name else None
 
@@ -99,7 +95,6 @@ def compare():
                 'similarity': round(similarity, 2)
             }
 
-            print(f"Comparison data: {comparison_data}")
             return jsonify(comparison_data)
         elif compound1_data:
             return jsonify({'compound1': compound1_data})
@@ -109,7 +104,6 @@ def compare():
             return jsonify({'error': 'No valid compounds provided.'})
 
     except Exception as e:
-        print(f"Comparison Error: {e}")
         return jsonify({'error': str(e)})
 
 

@@ -375,6 +375,12 @@
     <div id="viewerContainer">
         <span id="closeViewer">&times;</span>
         <div id="viewer" style="width: 500px; height: 500px; background-color: #f0f0f0;"></div>
+        <div style="margin-top: 10px;">
+            <label for="sphereScale">Atom Size:</label>
+            <input type="range" id="sphereScale" name="sphereScale" min="0.1" max="1" step="0.05" value="0.3">
+            <label for="stickRadius">Bond Thickness:</label>
+            <input type="range" id="stickRadius" name="stickRadius" min="0.05" max="0.5" step="0.05" value="0.15">
+        </div>
     </div>
 </div>
 
@@ -522,20 +528,27 @@
     }
 
     function loadMolecule(compound) {
+        const viewerContainer = document.getElementById('viewer');
+        viewerContainer.innerHTML = '';
+
         let viewer = $3Dmol.createViewer("viewer");
         try {
             const xyzData = convertJsonToXyz(compound.mol_data);
+
+            const sphereScale = parseFloat(document.getElementById('sphereScale').value);
+            const stickRadius = parseFloat(document.getElementById('stickRadius').value);
+
             viewer.addModel(xyzData, "xyz");
             viewer.setStyle({}, {
-            sphere: {
-                scale: 0.3,
-                colorscheme: 'Jmol'
-            },
-            stick: {
-                radius: 0.15,
-                colorscheme: 'Jmol'
-            }
-        });
+                sphere: {
+                    scale: sphereScale,
+                    colorscheme: 'Jmol'
+                },
+                stick: {
+                    radius: stickRadius,
+                    colorscheme: 'Jmol'
+                }
+            });
 
             viewer.zoomTo();
             viewer.render();
@@ -571,6 +584,22 @@
             loadMolecule(compound);
         }
     });
+
+    document.getElementById('sphereScale').addEventListener('input', function () {
+        reRenderModel();
+    });
+
+    document.getElementById('stickRadius').addEventListener('input', function () {
+        reRenderModel();
+    });
+
+    function reRenderModel() {
+        const compoundInfoDiv = document.querySelector('.compound-info[data-compound]');
+        if (compoundInfoDiv) {
+            const compound = JSON.parse(compoundInfoDiv.getAttribute('data-compound'));
+            loadMolecule(compound);
+        }
+    }
 
 </script>
 </body>
