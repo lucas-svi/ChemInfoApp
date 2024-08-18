@@ -109,8 +109,7 @@ def compare():
             return jsonify({'error': 'No valid compounds provided.'})
 
     except Exception as e:
-        # Log the error
-        print(f"An error occurred during comparison: {e}")
+        print(f"Comparison Error: {e}")
         return jsonify({'error': str(e)})
 
 
